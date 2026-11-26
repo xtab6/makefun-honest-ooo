@@ -11,7 +11,7 @@ Run: python3 main.py
 import os
 import sys
 
-# One sentence, 167 characters: honest about being too tired to do the
+# One sentence, 165 characters: honest about being too tired to do the
 # email justice, polite about answering it well next week instead.
 ENTRY = (
     "I'm out of office until Monday \u2014 I took this week off because "
@@ -38,8 +38,17 @@ def main() -> int:
             file=sys.stderr,
         )
         return 1
-    if not ENTRY.strip():
-        print("entry is only whitespace", file=sys.stderr)
+    if ENTRY != ENTRY.strip():
+        print("entry has leading or trailing whitespace", file=sys.stderr)
+        return 1
+    if "  " in ENTRY:
+        print("entry contains a double space", file=sys.stderr)
+        return 1
+    if ENTRY.count(".") != 1 or not ENTRY.endswith("."):
+        print(
+            "entry must be exactly one sentence ending with a period",
+            file=sys.stderr,
+        )
         return 1
 
     try:
